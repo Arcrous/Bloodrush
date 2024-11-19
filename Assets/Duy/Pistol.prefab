@@ -47,7 +47,7 @@ Animator:
   m_GameObject: {fileID: 616443806205186713}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: dbeb07ce6436fdc4988bcc03b8afc948, type: 3}
-  m_Controller: {fileID: 9100000, guid: ebfe8933ee8e73a4eb2757505410b716, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -380,7 +380,7 @@ GameObject:
   - component: {fileID: 6628630952207712638}
   - component: {fileID: 6360050722419976404}
   - component: {fileID: 6459320949709872010}
-  - component: {fileID: 1941756628097034181}
+  - component: {fileID: 9105404477399679321}
   m_Layer: 0
   m_Name: Pistol
   m_TagString: Untagged
@@ -451,7 +451,7 @@ MonoBehaviour:
   MaxChargeDuration: 2
   AmmoUsedOnStartCharge: 1
   AmmoUsageRateWhileCharging: 2
-  WeaponAnimator: {fileID: 1941756628097034181}
+  WeaponAnimator: {fileID: 9105404477399679321}
   MuzzleFlashPrefab: {fileID: 748781637555137343, guid: 9f671b22f25370048a18fb1f821294ec,
     type: 3}
   UnparentMuzzleFlash: 0
@@ -557,7 +557,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!95 &1941756628097034181
+--- !u!95 &9105404477399679321
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
