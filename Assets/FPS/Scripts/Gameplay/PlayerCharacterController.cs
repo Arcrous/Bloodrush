@@ -7,6 +7,8 @@ namespace Unity.FPS.Gameplay
     [RequireComponent(typeof(CharacterController), typeof(PlayerInputHandler), typeof(AudioSource))]
     public class PlayerCharacterController : MonoBehaviour
     {
+        [SerializeField] ProjectileBase projRef;
+
         [Header("References")] [Tooltip("Reference to the main camera used for the player")]
         public Camera PlayerCamera;
 
@@ -214,6 +216,31 @@ namespace Unity.FPS.Gameplay
             UpdateCharacterHeight(false);
 
             HandleCharacterMovement();
+
+            OverclockSkill();
+        }
+
+        void OverclockSkill()
+        {
+            GameObject weaponRef;
+            weaponRef = GameObject.FindWithTag("Weapon");
+
+            projRef = weaponRef.GetComponent<WeaponController>().ProjectilePrefab.GetComponent<ProjectileBase>();
+
+            if (m_InputHandler.GetOverclockInput())
+            {
+                Debug.Log("Overclocking");
+            }
+
+            if (projRef != null)
+            {
+                Debug.Log("Found projectile");
+            }
+            else
+            {
+                Debug.Log("No projectile");
+            }
+
         }
 
         void OnDie()
