@@ -74,11 +74,11 @@ namespace Unity.FPS.Gameplay
                 GameConstants.k_AxisNameJoystickLookVertical);
         }
 
-        public bool GetOverclockInput()
+        public bool GetBindInput()
         {
             if (CanProcessInput())
             {
-                return Input.GetButtonDown(GameConstants.k_ButtonNameOverclock);
+                return Input.GetButtonDown(GameConstants.k_ButtonNameBind);
             }
             return false;
         }
