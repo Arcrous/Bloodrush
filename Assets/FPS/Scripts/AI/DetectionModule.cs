@@ -137,5 +137,16 @@ namespace Unity.FPS.AI
                 Animator.SetTrigger(k_AnimAttackParameter);
             }
         }
+
+        void OnDrawGizmos()
+        {
+            // Draw detection range
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(DetectionSourcePoint.position, DetectionRange);
+
+            // Draw attack range
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(DetectionSourcePoint.position, AttackRange);
+        }
     }
 }
