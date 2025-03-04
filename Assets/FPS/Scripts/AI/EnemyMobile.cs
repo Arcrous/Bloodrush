@@ -118,12 +118,10 @@ namespace Unity.FPS.AI
                             m_EnemyController.DetectionModule.DetectionSourcePoint.position)
                         >= (AttackStopDistanceRatio * m_EnemyController.DetectionModule.AttackRange))
                     {
-                        Debug.Log("Not in attack range");
                         m_EnemyController.SetNavDestination(m_EnemyController.KnownDetectedTarget.transform.position);
                     }
                     else
                     {
-                        Debug.Log("In attack range");
                         m_EnemyController.SetNavDestination(transform.position);
                     }
 
