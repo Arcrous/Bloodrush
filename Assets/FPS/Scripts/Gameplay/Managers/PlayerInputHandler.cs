@@ -74,12 +74,33 @@ namespace Unity.FPS.Gameplay
                 GameConstants.k_AxisNameJoystickLookVertical);
         }
 
-        public bool GetBindInput()
+        public bool GetPowershotInput()
         {
             if (CanProcessInput())
             {
-                return Input.GetButtonDown(GameConstants.k_ButtonNameBind);
+                return Input.GetButtonDown(GameConstants.k_ButtonNamePowershot);
             }
+
+            return false;
+        }
+
+        public bool GetBindingShotInput()
+        {
+            if (CanProcessInput())
+            {
+                return Input.GetButtonDown(GameConstants.k_ButtonNameBindingShot);
+            }
+            
+            return false;
+        }
+
+        public bool GetAntiRifleInput()
+        {
+            if (CanProcessInput())
+            {
+                return Input.GetButtonDown(GameConstants.k_ButtonNameAntiRifle);
+            }
+            
             return false;
         }
 

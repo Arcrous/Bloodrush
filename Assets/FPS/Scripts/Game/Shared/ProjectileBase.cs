@@ -23,5 +23,17 @@ namespace Unity.FPS.Game
 
             OnShoot?.Invoke();
         }
+
+        public void Skillshot(GameObject owner)
+        {
+            Owner = owner;
+            Debug.Log("Owner is: " + Owner.name);
+            InitialPosition = transform.position;
+            InitialDirection = transform.forward;
+            InheritedMuzzleVelocity = Vector3.zero;
+            InitialCharge = 1f;
+
+            OnShoot?.Invoke();
+        }
     }
 }

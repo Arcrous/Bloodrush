@@ -7,6 +7,10 @@ namespace Unity.FPS.Gameplay
     [RequireComponent(typeof(CharacterController), typeof(PlayerInputHandler), typeof(AudioSource))]
     public class PlayerCharacterController : MonoBehaviour
     {
+        [Header("Skills projectiles")]
+        [Tooltip("The projectile prefab for powershot")] public ProjectileBase PowershotPrefab;
+        [Tooltip("Powershot spawn position")] public Transform skillshotPos;
+
         [Header("References")] [Tooltip("Reference to the main camera used for the player")]
         public Camera PlayerCamera;
 
@@ -215,8 +219,42 @@ namespace Unity.FPS.Gameplay
 
             HandleCharacterMovement();
 
+            HandleSkillInput();
+
         }
 
+        void HandleSkillInput()
+        {
+            PowershotInput();
+            BindingShotInput(); 
+            AntiRifleInput();
+        }
+
+        void PowershotInput()
+        {
+            if (m_InputHandler.GetPowershotInput())
+            {
+                Debug.Log("Powershot input");
+                ProjectileBase newProjectile = Instantiate(PowershotPrefab, skillshotPos.position, Quaternion.LookRotation(skillshotPos.forward));
+                newProjectile.Skillshot(this.gameObject);
+            }
+        }
+
+        void BindingShotInput()
+        {
+            if (m_InputHandler.GetBindingShotInput())
+            {
+                Debug.Log("Binding shot input");
+            }
+        }
+
+        void AntiRifleInput()
+        {
+            if (m_InputHandler.GetAntiRifleInput())
+            {
+                Debug.Log("Anti rifle input");
+            }
+        }
 
         void OnDie()
         {
