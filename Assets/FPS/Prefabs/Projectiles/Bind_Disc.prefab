@@ -100,6 +100,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de99b30e1e73fd14e98cc5371da25d12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  binding: 1
+  bindDuration: 1
   Radius: 0.2
   Root: {fileID: 106790115311484948}
   Tip: {fileID: 106790115311484948}

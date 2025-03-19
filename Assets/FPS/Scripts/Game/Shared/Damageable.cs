@@ -44,5 +44,13 @@ namespace Unity.FPS.Game
                 Health.TakeDamage(totalDamage, damageSource);
             }
         }
+
+        public void InflictBind(float bindDuration)
+        {
+            if(Health)
+            {
+                Health.Bind(bindDuration);
+            }
+        }
     }
 }

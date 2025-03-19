@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
 using Unity.FPS.Game;
+using Unity.FPS.Gameplay;
 using UnityEngine;
 
 namespace Unity.FPS.Gameplay
 {
     public class ProjectileStandard : ProjectileBase
     {
+        [SerializeField] bool binding = false;
+        [SerializeField] private float bindDuration;
+
         [Header("General")] [Tooltip("Radius of this projectile's collision detection")]
         public float Radius = 0.01f;
 
@@ -63,7 +67,6 @@ namespace Unity.FPS.Gameplay
         Vector3 m_TrajectoryCorrectionVector;
         Vector3 m_ConsumedTrajectoryCorrectionVector;
         List<Collider> m_IgnoredColliders;
-
         const QueryTriggerInteraction k_TriggerInteraction = QueryTriggerInteraction.Collide;
 
         void OnEnable()
@@ -223,7 +226,15 @@ namespace Unity.FPS.Gameplay
         void OnHit(Vector3 point, Vector3 normal, Collider collider)
         {
             // damage
-            if (AreaOfDamage)
+            if(binding)
+            {
+                Damageable damageable = collider.GetComponent<Damageable>();
+                if(damageable)
+                {
+                    damageable.InflictBind(bindDuration);
+                }
+            }
+            else if (AreaOfDamage)
             {
                 // area damage
                 AreaOfDamage.InflictDamageInArea(Damage, point, HittableLayers, k_TriggerInteraction,

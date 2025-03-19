@@ -13,6 +13,7 @@ namespace Unity.FPS.Game
         public UnityAction<float, GameObject> OnDamaged;
         public UnityAction<float> OnHealed;
         public UnityAction OnDie;
+        public UnityAction<float> OnBind;
 
         public float CurrentHealth { get; set; }
         public bool Invincible { get; set; }
@@ -59,6 +60,14 @@ namespace Unity.FPS.Game
             }
 
             HandleDeath();
+        }
+
+        public void Bind(float bindDuration)
+        {
+            if (Invincible)
+                return;
+
+            OnBind?.Invoke(bindDuration);
         }
 
         public void Kill()

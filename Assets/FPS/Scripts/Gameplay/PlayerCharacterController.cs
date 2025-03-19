@@ -9,7 +9,8 @@ namespace Unity.FPS.Gameplay
     {
         [Header("Skills projectiles")]
         [Tooltip("The projectile prefab for powershot")] public ProjectileBase PowershotPrefab;
-        [Tooltip("Powershot spawn position")] public Transform skillshotPos;
+        [Tooltip("The projectile prefab for powershot")] public ProjectileBase BindingshotPrefab;
+        [Tooltip("Skill projectile spawn position")] public Transform skillshotPos;
 
         [Header("References")] [Tooltip("Reference to the main camera used for the player")]
         public Camera PlayerCamera;
@@ -245,6 +246,8 @@ namespace Unity.FPS.Gameplay
             if (m_InputHandler.GetBindingShotInput())
             {
                 Debug.Log("Binding shot input");
+                ProjectileBase newProjectile = Instantiate(BindingshotPrefab, skillshotPos.position, Quaternion.LookRotation(skillshotPos.forward));
+                newProjectile.Skillshot(this.gameObject);
             }
         }
 

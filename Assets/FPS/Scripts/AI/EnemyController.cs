@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.FPS.Game;
 using UnityEngine;
@@ -143,6 +144,8 @@ namespace Unity.FPS.AI
             // Subscribe to damage & death actions
             m_Health.OnDie += OnDie;
             m_Health.OnDamaged += OnDamaged;
+
+            m_Health.OnBind += OnBind;
 
             // Find and initialize all weapons
             FindAndInitializeAllWeapons();
@@ -355,6 +358,23 @@ namespace Unity.FPS.AI
             
                 m_WasDamagedThisFrame = true;
             }
+        }
+
+        void OnBind(float bindDuration)
+        {
+            Debug.Log("Starting Bound");
+            StartCoroutine(Bound(bindDuration));
+        }
+
+        IEnumerator Bound(float boundDuration)
+        {
+            Debug.Log("Bound");
+            float originalSpeed = NavMeshAgent.speed;
+            NavMeshAgent.speed = 0f;
+            
+            yield return new WaitForSeconds(boundDuration);
+            
+            NavMeshAgent.speed = originalSpeed;
         }
 
         void OnDie()
