@@ -7,6 +7,9 @@ namespace Unity.FPS.Gameplay
 {
     public class ProjectileStandard : ProjectileBase
     {
+        [SerializeField] Health playerHealth;
+        [SerializeField] bool healing = false;
+        [SerializeField] float healAmount = 10f;
         [SerializeField] bool binding = false;
         [SerializeField] private float bindDuration;
 
@@ -247,6 +250,23 @@ namespace Unity.FPS.Gameplay
                 if (damageable)
                 {
                     damageable.InflictDamage(Damage, false, m_ProjectileBase.Owner);
+                }
+            }
+
+            if(healing)
+            {
+                Damageable damageable = collider.GetComponent<Damageable>();
+                if(damageable != null)
+                {
+                    playerHealth = GameObject.FindWithTag("Player").GetComponent<Health>();
+                    if (playerHealth != null)
+                    {
+                        Debug.Log("Healing: " + playerHealth);
+                        playerHealth.Heal(healAmount);
+                    }else
+                    {
+                        Debug.Log("No health component found on player.");
+                    }
                 }
             }
 

@@ -233,21 +233,31 @@ namespace Unity.FPS.Gameplay
 
         void PowershotInput()
         {
-            if (m_InputHandler.GetPowershotInput())
+            if (m_InputHandler.GetPowershotInput() && m_Health.CurrentHealth >= 1f)
             {
                 Debug.Log("Powershot input");
                 ProjectileBase newProjectile = Instantiate(PowershotPrefab, skillshotPos.position, Quaternion.LookRotation(skillshotPos.forward));
                 newProjectile.Skillshot(this.gameObject);
+                m_Health.TakeDamage(10f, this.gameObject); // cost of skill
+            }
+            else if (m_Health.CurrentHealth <= 1f)
+            {
+                Debug.Log("Powershot input not pressed or not enough health");
             }
         }
 
         void BindingShotInput()
         {
-            if (m_InputHandler.GetBindingShotInput())
+            if (m_InputHandler.GetBindingShotInput() && m_Health.CurrentHealth >= 1f)
             {
                 Debug.Log("Binding shot input");
                 ProjectileBase newProjectile = Instantiate(BindingshotPrefab, skillshotPos.position, Quaternion.LookRotation(skillshotPos.forward));
                 newProjectile.Skillshot(this.gameObject);
+                m_Health.TakeDamage(15f, this.gameObject); // cost of skill
+            }
+            else if (m_Health.CurrentHealth <= 1f)
+            {
+                Debug.Log("Binding shot input not pressed or not enough health");
             }
         }
 
