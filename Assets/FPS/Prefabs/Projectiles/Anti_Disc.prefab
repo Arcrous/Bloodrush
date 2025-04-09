@@ -100,11 +100,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de99b30e1e73fd14e98cc5371da25d12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerHealth: {fileID: 0}
+  healing: 0
+  healAmount: 10
+  binding: 0
+  bindDuration: 0
   Radius: 0.2
   Root: {fileID: 106790115311484948}
   Tip: {fileID: 106790115311484948}
   MaxLifeTime: 5
-  ImpactVfx: {fileID: 4260779743739990948, guid: bbe6bdea7cd168e428a309e9eb2e728b,
+  ImpactVfx: {fileID: 4260779743739990948, guid: 92e742b981509834881ec3c8bd42ae6f,
     type: 3}
   ImpactVfxLifetime: 5
   ImpactVfxSpawnOffset: 0.1
@@ -116,7 +121,7 @@ MonoBehaviour:
   GravityDownAcceleration: 10
   TrajectoryCorrectionDistance: -1
   InheritWeaponVelocity: 0
-  Damage: 40
+  Damage: 60
   AreaOfDamage: {fileID: 1203337828444365110}
   RadiusColor: {r: 0, g: 1, b: 1, a: 0.49803922}
 --- !u!114 &1203337828444365110
@@ -170,11 +175,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damage:
-    Min: 80
-    Max: 200
+    Min: 60
+    Max: 100
   Radius:
     Min: 0.2
-    Max: 0.2
+    Max: 0.5
   Speed:
     Min: 20
     Max: 40
@@ -183,7 +188,7 @@ MonoBehaviour:
     Max: 3
   AreaOfEffectDistance:
     Min: 5
-    Max: 5
+    Max: 9
 --- !u!114 &6841512634174719543
 MonoBehaviour:
   m_ObjectHideFlags: 0
