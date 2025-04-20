@@ -90,7 +90,7 @@ namespace Unity.FPS.Gameplay
             {
                 return Input.GetButtonDown(GameConstants.k_ButtonNameBindingShot);
             }
-            
+
             return false;
         }
 
@@ -100,7 +100,17 @@ namespace Unity.FPS.Gameplay
             {
                 return Input.GetButtonDown(GameConstants.k_ButtonNameAntiRifle);
             }
-            
+
+            return false;
+        }
+
+        public bool GetRemoveWeaponInput()
+        {
+            if (CanProcessInput())
+            {
+                return Input.GetButtonDown(GameConstants.k_ButtonNameRemoveWeapon);
+            }
+
             return false;
         }
 

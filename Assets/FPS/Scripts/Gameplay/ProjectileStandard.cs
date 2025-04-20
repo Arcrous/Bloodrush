@@ -255,6 +255,13 @@ namespace Unity.FPS.Gameplay
                 if (damageable)
                 {
                     damageable.InflictDamage(Damage, false, m_ProjectileBase.Owner);
+
+                    if (collider.tag == "Enemy")
+                    {
+                        playerController = GameObject.FindWithTag("Player").GetComponentInParent<PlayerCharacterController>();
+                        playerController.ultGauge += 5f;
+                        Debug.Log("Player ult %: " + playerController.ultGauge);
+                    }
                 }
             }
 
@@ -276,9 +283,6 @@ namespace Unity.FPS.Gameplay
                 }
             }
 
-            playerController = GameObject.FindWithTag("Player").GetComponentInParent<PlayerCharacterController>();
-            playerController.ultGauge += 5f;
-            Debug.Log("Player ult %: " + playerController.ultGauge);
 
             // impact vfx
             if (ImpactVfx)

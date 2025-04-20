@@ -19,7 +19,8 @@ namespace Unity.FPS.Gameplay
         [Tooltip("List of weapon the player will start with")]
         public List<WeaponController> StartingWeapons = new List<WeaponController>();
 
-        [Header("References")] [Tooltip("Secondary camera used to avoid seeing weapon go throw geometries")]
+        [Header("References")]
+        [Tooltip("Secondary camera used to avoid seeing weapon go throw geometries")]
         public Camera WeaponCamera;
 
         [Tooltip("Parent transform where all weapon will be added in the hierarchy")]
@@ -57,7 +58,8 @@ namespace Unity.FPS.Gameplay
         [Tooltip("How fast the weapon goes back to it's original position after the recoil is finished")]
         public float RecoilRestitutionSharpness = 10f;
 
-        [Header("Misc")] [Tooltip("Speed at which the aiming animatoin is played")]
+        [Header("Misc")]
+        [Tooltip("Speed at which the aiming animatoin is played")]
         public float AimingAnimationSpeed = 10f;
 
         [Tooltip("Field of view when not aiming")]
@@ -153,7 +155,7 @@ namespace Unity.FPS.Gameplay
             }
 
             // weapon switch handling
-            if (!IsAiming &&
+            if (!IsAiming && !m_PlayerCharacterController.isUlting &&
                 (activeWeapon == null || !activeWeapon.IsCharging) &&
                 (m_WeaponSwitchState == WeaponSwitchState.Up || m_WeaponSwitchState == WeaponSwitchState.Down))
             {
@@ -554,6 +556,15 @@ namespace Unity.FPS.Gameplay
             if (newWeapon != null)
             {
                 newWeapon.ShowWeapon(true);
+
+                //Sniper related code
+                newWeapon.ultFinished += () =>
+                {
+                    Debug.Log("Ult finished");
+                    m_PlayerCharacterController.canUseUlt = false;
+                    m_PlayerCharacterController.isUlting = false;
+                    RemoveWeapon(newWeapon);
+                };
             }
         }
     }

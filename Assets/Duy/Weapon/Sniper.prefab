@@ -117,6 +117,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &3513705014611305538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6857823528477729133}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6857823528477729133
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3513705014611305538}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.1180943, y: -0.26263526, z: 0.4772789}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3677974213527818138}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5395109154487380971
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,6 +181,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8442985355631075390}
+  - {fileID: 6857823528477729133}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -165,8 +197,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ad90ba0b1477764da373f5ec01a8cb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsSniper: 1
   WeaponName: Railgun
-  WeaponIcon: {fileID: 21300000, guid: 8cbb10368086f014a8b7fc8932e7f436, type: 3}
+  WeaponIcon: {fileID: 21300000, guid: 32f553a79b48c594f888a865a107c899, type: 3}
   CrosshairDataDefault:
     CrosshairSprite: {fileID: 0}
     CrosshairSize: 0
@@ -186,7 +219,7 @@ MonoBehaviour:
   RecoilForce: 0.4
   AimZoomRatio: 0.65
   AimOffset: {x: 0.3, y: 0, z: -0.2}
-  AutomaticReload: 1
+  AutomaticReload: 0
   HasPhysicalBullets: 0
   ClipSize: 1
   ShellCasing: {fileID: 0}
@@ -196,7 +229,7 @@ MonoBehaviour:
   AmmoReloadRate: 15
   AmmoReloadDelay: 1
   MaxAmmo: 5
-  AutomaticReleaseOnCharged: 0
+  AutomaticReleaseOnCharged: 1
   MaxChargeDuration: 1.5
   AmmoUsedOnStartCharge: 0
   AmmoUsageRateWhileCharging: 1
@@ -257,21 +290,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b92ab16a4151e294a9e6f5a025221be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ChargingObject: {fileID: 0}
+  ChargingObject: {fileID: 3513705014611305538}
   SpinningFrame: {fileID: 0}
   Scale:
     Min: {x: 0, y: 0, z: 0}
-    Max: {x: 0.15, y: 0.15, z: 0.15}
+    Max: {x: 0, y: 0, z: 0}
   DiskOrbitParticlePrefab: {fileID: 1087039822203223203, guid: 54fdfcb2e7f72ae449fb7609dcb85db1,
     type: 3}
   Offset: {x: 0, y: 0.2, z: 0.2}
   ParentTransform: {fileID: 0}
   OrbitY:
     Min: 3
-    Max: 10
+    Max: 3
   Radius:
     Min: {x: 1, y: 1, z: 1}
-    Max: {x: 3, y: 3, z: 3}
+    Max: {x: 1, y: 1, z: 1}
   SpinningSpeed:
     Min: 50
     Max: 1000

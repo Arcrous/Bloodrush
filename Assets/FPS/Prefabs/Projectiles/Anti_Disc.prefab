@@ -101,6 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerHealth: {fileID: 0}
+  playerController: {fileID: 0}
   healing: 0
   healAmount: 10
   binding: 0
@@ -204,7 +205,7 @@ MonoBehaviour:
   ChargingObject: {fileID: 106790115311484953}
   Scale:
     Min: {x: 0.5, y: 0.5, z: 0.5}
-    Max: {x: 0.8, y: 0.8, z: 0.8}
+    Max: {x: 2, y: 2, z: 2}
   Color:
     Min: {r: 0, g: 2, b: 0.08890152, a: 1}
     Max: {r: 0, g: 1.9999998, b: 0.32460728, a: 1}

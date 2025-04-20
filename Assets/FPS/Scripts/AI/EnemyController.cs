@@ -37,46 +37,57 @@ namespace Unity.FPS.AI
         public float DeathDuration = 0f;
 
 
-        [Header("Weapons Parameters")] [Tooltip("Allow weapon swapping for this enemy")]
+        [Header("Weapons Parameters")]
+        [Tooltip("Allow weapon swapping for this enemy")]
         public bool SwapToNextWeapon = false;
 
         [Tooltip("Time delay between a weapon swap and the next attack")]
         public float DelayAfterWeaponSwap = 0f;
 
-        [Header("Eye color")] [Tooltip("Material for the eye color")]
+        [Header("Eye color")]
+        [Tooltip("Material for the eye color")]
         public Material EyeColorMaterial;
 
-        [Tooltip("The default color of the bot's eye")] [ColorUsageAttribute(true, true)]
+        [Tooltip("The default color of the bot's eye")]
+        [ColorUsageAttribute(true, true)]
         public Color DefaultEyeColor;
 
-        [Tooltip("The attack color of the bot's eye")] [ColorUsageAttribute(true, true)]
+        [Tooltip("The attack color of the bot's eye")]
+        [ColorUsageAttribute(true, true)]
         public Color AttackEyeColor;
 
-        [Header("Flash on hit")] [Tooltip("The material used for the body of the hoverbot")]
+        [Header("Flash on hit")]
+        [Tooltip("The material used for the body of the hoverbot")]
         public Material BodyMaterial;
 
-        [Tooltip("The gradient representing the color of the flash on hit")] [GradientUsageAttribute(true)]
+        [Tooltip("The gradient representing the color of the flash on hit")]
+        [GradientUsageAttribute(true)]
         public Gradient OnHitBodyGradient;
 
         [Tooltip("The duration of the flash on hit")]
         public float FlashOnHitDuration = 0.5f;
 
-        [Header("Sounds")] [Tooltip("Sound played when recieving damages")]
+        [Header("Sounds")]
+        [Tooltip("Sound played when recieving damages")]
         public AudioClip DamageTick;
 
-        [Header("VFX")] [Tooltip("The VFX prefab spawned when the enemy dies")]
+        [Header("VFX")]
+        [Tooltip("The VFX prefab spawned when the enemy dies")]
         public GameObject DeathVfx;
 
         [Tooltip("The point at which the death VFX is spawned")]
         public Transform DeathVfxSpawnPoint;
 
-        [Header("Loot")] [Tooltip("The object this enemy can drop when dying")]
+        [Header("Loot")]
+        [Tooltip("The object this enemy can drop when dying")]
         public GameObject LootPrefab;
 
-        [Tooltip("The chance the object has to drop")] [Range(0, 1)]
+        [Tooltip("The chance the object has to drop")]
+        [Range(0, 1)]
         public float DropRate = 1f;
 
-        [Header("Debug Display")] [Tooltip("Color of the sphere gizmo representing the path reaching range")]
+        [Header("Debug Display")]
+        [Tooltip("Color of the sphere gizmo representing the path reaching range")]
         public Color PathReachingRangeColor = Color.yellow;
 
         [Tooltip("Color of the sphere gizmo representing the attack range")]
@@ -119,7 +130,7 @@ namespace Unity.FPS.AI
         WeaponController[] m_Weapons;
         NavigationModule m_NavigationModule;
 
-        void Start()
+        protected virtual void Start()
         {
             m_EnemyManager = FindObjectOfType<EnemyManager>();
             DebugUtility.HandleErrorIfNullFindObject<EnemyManager, EnemyController>(m_EnemyManager, this);
@@ -203,7 +214,7 @@ namespace Unity.FPS.AI
             }
         }
 
-        void Update()
+        protected virtual void Update()
         {
             EnsureIsWithinLevelBounds();
 
@@ -348,14 +359,14 @@ namespace Unity.FPS.AI
             {
                 // pursue the player
                 DetectionModule.OnDamaged(damageSource);
-                
+
                 onDamaged?.Invoke();
                 m_LastTimeDamaged = Time.time;
-            
+
                 // play the damage tick sound
                 if (DamageTick && !m_WasDamagedThisFrame)
                     AudioUtility.CreateSFX(DamageTick, transform.position, AudioUtility.AudioGroups.DamageTick, 0f);
-            
+
                 m_WasDamagedThisFrame = true;
             }
         }
@@ -368,12 +379,15 @@ namespace Unity.FPS.AI
 
         IEnumerator Bound(float boundDuration)
         {
+            if (m_Health.m_IsDead)
+                yield break;
+
             Debug.Log("Bound");
             float originalSpeed = NavMeshAgent.speed;
             NavMeshAgent.speed = 0f;
-            
+
             yield return new WaitForSeconds(boundDuration);
-            
+
             NavMeshAgent.speed = originalSpeed;
         }
 
@@ -396,13 +410,13 @@ namespace Unity.FPS.AI
             Destroy(gameObject, DeathDuration);
         }
 
-        void OnDrawGizmosSelected()
+        protected virtual void OnDrawGizmosSelected()
         {
             // Path reaching range
             Gizmos.color = PathReachingRangeColor;
             Gizmos.DrawWireSphere(transform.position, PathReachingRadius);
 
-            if (DetectionModule != null)
+            /* if (DetectionModule != null)
             {
                 // Detection range
                 Gizmos.color = DetectionRangeColor;
@@ -411,7 +425,7 @@ namespace Unity.FPS.AI
                 // Attack range
                 Gizmos.color = AttackRangeColor;
                 Gizmos.DrawWireSphere(transform.position, DetectionModule.AttackRange);
-            }
+            } */
         }
 
         public void OrientWeaponsTowards(Vector3 lookPosition)

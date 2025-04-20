@@ -7,6 +7,8 @@ namespace Unity.FPS.Gameplay
     {
         [Tooltip("The prefab for the weapon that will be added to the player on pickup")]
         public WeaponController WeaponPrefab;
+        [SerializeField] bool unlockUlt;
+
 
         protected override void Start()
         {
@@ -25,12 +27,20 @@ namespace Unity.FPS.Gameplay
             PlayerWeaponsManager playerWeaponsManager = byPlayer.GetComponent<PlayerWeaponsManager>();
             if (playerWeaponsManager)
             {
-                if (playerWeaponsManager.AddWeapon(WeaponPrefab))
+                if (unlockUlt)
                 {
+                    Debug.Log("Unlocking ultimate ability for player: ");
+                    byPlayer.ultUnlocked = true;
+                    //PlayPickupFeedback();
+                    Destroy(gameObject);
+                }
+                if (playerWeaponsManager.AddWeapon(WeaponPrefab) && !unlockUlt)
+                {
+                    Debug.Log("Adding weapon to player: " + WeaponPrefab.name);
                     // Handle auto-switching to weapon if no weapons currently
-                    if (playerWeaponsManager.GetActiveWeapon() == null)
+                    if (playerWeaponsManager.GetActiveWeapon() == null || WeaponPrefab.IsSniper)
                     {
-                        playerWeaponsManager.SwitchWeapon(true);
+                        playerWeaponsManager.SwitchToWeaponIndex(3);
                     }
 
                     PlayPickupFeedback();

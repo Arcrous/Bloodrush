@@ -250,7 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponName: Pistol
-  WeaponIcon: {fileID: 21300000, guid: 3c187e19c32c13542ba8a0c1a3a88ece, type: 3}
+  WeaponIcon: {fileID: 21300000, guid: ab516f4e3d33cb3469591886ff5aeb82, type: 3}
   CrosshairDataDefault:
     CrosshairSprite: {fileID: 21300000, guid: 14aa1febcf423c84997aa10d7ff64d17, type: 3}
     CrosshairSize: 55

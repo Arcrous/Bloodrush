@@ -37,7 +37,7 @@ namespace Unity.FPS.AI
         const string k_AnimAlertedParameter = "Alerted";
         const string k_AnimOnDamagedParameter = "OnDamaged";
 
-        void Start()
+        protected virtual void Start()
         {
             m_EnemyController = GetComponent<EnemyController>();
             DebugUtility.HandleErrorIfNullGetComponent<EnemyController, EnemyMobile>(m_EnemyController, this,
@@ -59,7 +59,7 @@ namespace Unity.FPS.AI
             m_AudioSource.Play();
         }
 
-        void Update()
+        protected virtual void Update()
         {
             UpdateAiStateTransitions();
             UpdateCurrentAiState();

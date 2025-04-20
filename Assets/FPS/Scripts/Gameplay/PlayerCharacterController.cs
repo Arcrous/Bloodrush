@@ -7,10 +7,14 @@ namespace Unity.FPS.Gameplay
     [RequireComponent(typeof(CharacterController), typeof(PlayerInputHandler), typeof(AudioSource))]
     public class PlayerCharacterController : MonoBehaviour
     {
-        [Header("Skills projectiles")]
-
-        [SerializeField] bool canUseUlt;
+        [Header("Skills and Ult")]
+        [Tooltip("Reference to skills projectile and ultimate related variables")]
+        [SerializeField] public bool ultUnlocked = false;
+        [SerializeField] public bool canUseUlt;
+        [SerializeField] public bool isUlting;
         [SerializeField] public float ultGauge;
+        [SerializeField] GameObject ultPrefab;
+
         [Tooltip("The projectile prefab for powershot")] public ProjectileBase PowershotPrefab;
         [Tooltip("The projectile prefab for powershot")] public ProjectileBase BindingshotPrefab;
         [Tooltip("Skill projectile spawn position")] public Transform skillshotPos;
@@ -234,6 +238,20 @@ namespace Unity.FPS.Gameplay
 
             HandleSkillInput();
 
+
+            if (m_InputHandler.GetRemoveWeaponInput())
+            {
+                m_WeaponsManager.RemoveWeapon(m_WeaponsManager.GetActiveWeapon());
+            }
+
+            if (ultGauge > 100f)
+            {
+                ultGauge = 100f;
+            }
+            else if (ultGauge < 0f)
+            {
+                ultGauge = 0f;
+            }
         }
 
         void HandleSkillInput()
@@ -244,19 +262,22 @@ namespace Unity.FPS.Gameplay
             }
             PowershotInput();
             BindingShotInput();
-            AntiRifleInput();
+            if (ultUnlocked)
+            {
+                AntiRifleInput();
+            }
         }
 
         void PowershotInput()
         {
-            if (m_InputHandler.GetPowershotInput() && m_Health.CurrentHealth >= 1f)
+            if (m_InputHandler.GetPowershotInput() && m_Health.CurrentHealth >= 11f)
             {
                 Debug.Log("Powershot input");
                 ProjectileBase newProjectile = Instantiate(PowershotPrefab, skillshotPos.position, Quaternion.LookRotation(skillshotPos.forward));
                 newProjectile.Skillshot(this.gameObject);
                 m_Health.TakeDamage(10f, this.gameObject); // cost of skill
             }
-            else if (m_Health.CurrentHealth <= 1f)
+            else if (m_Health.CurrentHealth <= 10f)
             {
                 Debug.Log("Powershot input not pressed or not enough health");
             }
@@ -282,7 +303,9 @@ namespace Unity.FPS.Gameplay
             if (m_InputHandler.GetAntiRifleInput() && canUseUlt)
             {
                 Debug.Log("Anti rifle input");
+                Instantiate(ultPrefab, this.gameObject.transform.position, Quaternion.identity);
                 ultGauge = 0f;
+                isUlting = true;
             }
             else if (m_InputHandler.GetAntiRifleInput() && !canUseUlt)
             {

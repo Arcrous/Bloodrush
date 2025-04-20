@@ -147,8 +147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ad90ba0b1477764da373f5ec01a8cb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsSniper: 0
+  shotsFired: 0
   WeaponName: Shotgun
-  WeaponIcon: {fileID: 21300000, guid: 8cbb10368086f014a8b7fc8932e7f436, type: 3}
+  WeaponIcon: {fileID: 21300000, guid: fc1da91380d7ea84aabf9e70b02802fa, type: 3}
   CrosshairDataDefault:
     CrosshairSprite: {fileID: 21300000, guid: 2962952d6e5ae7342a298d45a3945069, type: 3}
     CrosshairSize: 40
@@ -1332,32 +1334,32 @@ PrefabInstance:
     - target: {fileID: 8950656843831499513, guid: d3fb404dac8f8493fb9ddcac756ba061,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.40537763
+      value: 0.29162365
       objectReference: {fileID: 0}
     - target: {fileID: 8950656843831499513, guid: d3fb404dac8f8493fb9ddcac756ba061,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.40537763
+      value: 0.29162365
       objectReference: {fileID: 0}
     - target: {fileID: 8950656843831499513, guid: d3fb404dac8f8493fb9ddcac756ba061,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.40537763
+      value: 0.29162365
       objectReference: {fileID: 0}
     - target: {fileID: 8950656843831499513, guid: d3fb404dac8f8493fb9ddcac756ba061,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.000026828
       objectReference: {fileID: 0}
     - target: {fileID: 8950656843831499513, guid: d3fb404dac8f8493fb9ddcac756ba061,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.303
+      value: -0.31201
       objectReference: {fileID: 0}
     - target: {fileID: 8950656843831499513, guid: d3fb404dac8f8493fb9ddcac756ba061,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.027
+      value: -0.02281
       objectReference: {fileID: 0}
     - target: {fileID: 8950656843831499513, guid: d3fb404dac8f8493fb9ddcac756ba061,
         type: 3}

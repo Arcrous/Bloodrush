@@ -22,7 +22,7 @@ namespace Unity.FPS.Game
         public float GetRatio() => CurrentHealth / MaxHealth;
         public bool IsCritical() => GetRatio() <= CriticalHealthRatio;
 
-        bool m_IsDead;
+        public bool m_IsDead;
 
         void Start()
         {
