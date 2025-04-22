@@ -17,7 +17,6 @@ namespace Unity.FPS.AI
             Ranged,
             SpawnEnemies
         }
-
         [Header("Boss Parameters")]
         [Tooltip("Whether the boss is currently active")]
         public bool IsActive = false;
@@ -32,7 +31,7 @@ namespace Unity.FPS.AI
         public float RangedAttackRange = 15f;
 
         [Tooltip("The enemy prefab to spawn")]
-        public GameObject EnemyPrefabToSpawn;
+        public GameObject[] EnemyPrefabsToSpawn;
 
         [Tooltip("The maximum number of enemies that can be spawned at once")]
         public int MaxSpawnedEnemies = 5;
@@ -45,6 +44,14 @@ namespace Unity.FPS.AI
 
         [Tooltip("Duration of the spawn animation")]
         public float SpawnAnimationDuration = 2f;
+
+        [Header("Boss Weapons")]
+        [Tooltip("Reference to the melee weapon controller")]
+        public BossWeaponController MeleeWeapon;
+
+        [Tooltip("Reference to the ranged weapon controller")]
+        public BossWeaponController RangedWeapon;
+        public BossWeaponController RangedWeapon2;
 
         [Header("Boss VFX")]
         [Tooltip("VFX played when boss is activated")]
@@ -72,10 +79,13 @@ namespace Unity.FPS.AI
         public float MinRangedAttackDistance = 10f;
 
         [Tooltip("Force applied when dashing backwards")]
-        public float DashForce = 10f;
+        public float DashForce = 30f;
 
         [Tooltip("Duration of the dash")]
         public float DashDuration = 0.5f;
+
+        [Tooltip("Layer mask for dash obstacle detection")]
+        public LayerMask DashObstacleLayers = Physics.DefaultRaycastLayers;
 
         public UnityAction onBossActivated;
         public UnityAction<BossAttackType> onBossAttack;
@@ -119,6 +129,17 @@ namespace Unity.FPS.AI
                 // Disable navmesh agent if boss is inactive
                 NavMeshAgent.enabled = false;
             }
+
+            // Setup weapon controllers
+            if (MeleeWeapon != null)
+            {
+                MeleeWeapon.Owner = gameObject;
+            }
+
+            if (RangedWeapon != null)
+            {
+                RangedWeapon.Owner = gameObject;
+            }
         }
 
         new void Update()
@@ -152,13 +173,27 @@ namespace Unity.FPS.AI
             }
 
             // Choose a random attack type
-            int rand = Random.Range(1, 3);
+            int rand = Random.Range(1, 4); // 1 to 3
             if (rand == 1)
+            {
                 m_CurrentAttackType = BossAttackType.Melee;
+                Debug.Log("Melee attack chosen");
+            }
             else if (rand == 2)
+            {
                 m_CurrentAttackType = BossAttackType.Ranged;
-            else
+                Debug.Log("Ranged attack chosen");
+            }
+            else if (rand == 3)
+            {
                 m_CurrentAttackType = BossAttackType.SpawnEnemies;
+                Debug.Log("Spawn enemies attack chosen");
+            }
+            else
+            {
+                Debug.LogWarning("Invalid attack type chosen, defaulting to spawn enemies.");
+                m_CurrentAttackType = BossAttackType.SpawnEnemies;
+            }
         }
 
         IEnumerator PerformAttack()
@@ -174,15 +209,15 @@ namespace Unity.FPS.AI
                 case BossAttackType.Melee:
                     // Set detection module attack range to melee range
                     DetectionModule.AttackRange = MeleeAttackRange;
-                    Debug.Log("Melee attack range is now: " + DetectionModule.AttackRange);
 
                     yield return new WaitForSeconds(.1f);
 
                     // Wait until we're in melee range or timeout
                     float meleeStartTime = Time.time;
-                    while (!DetectionModule.IsTargetInAttackRange && Time.time - meleeStartTime < 5f)
+                    float meleeTimeout = 15f; // 10 seconds timeout
+
+                    while (!DetectionModule.IsTargetInAttackRange && Time.time - meleeStartTime < meleeTimeout)
                     {
-                        Debug.Log("Is NOT in melee range");
                         if (KnownDetectedTarget == null)
                             break;
 
@@ -190,27 +225,35 @@ namespace Unity.FPS.AI
                         yield return null;
                     }
 
+                    // Check if we timed out
+                    if (Time.time - meleeStartTime >= meleeTimeout)
+                    {
+                        Debug.Log("Melee attack timed out - target not reached");
+                        break;
+                    }
+
                     // If target is in range, perform melee attack
                     if (DetectionModule.IsTargetInAttackRange)
                     {
-                        Debug.Log("Is in melee range");
                         SetNavDestination(transform.position); // Stop moving
 
                         // Play melee attack animation
                         if (Animator != null)
                         {
-                            Debug.Log("Melee attack animation triggered");
                             Animator.SetTrigger(MeleeAttackTrigger);
                         }
 
-                        TryAtack(KnownDetectedTarget.transform.position);
+                        // Use our custom melee weapon
+                        if (MeleeWeapon != null)
+                        {
+                            MeleeWeapon.MeleeAttack(KnownDetectedTarget.transform.position);
+                        }
                     }
                     break;
 
                 case BossAttackType.Ranged:
                     // Set detection module attack range to ranged range
                     DetectionModule.AttackRange = RangedAttackRange;
-                    Debug.Log("Ranged attack range is now: " + DetectionModule.AttackRange);
 
                     yield return new WaitForSeconds(.1f);
 
@@ -228,29 +271,22 @@ namespace Unity.FPS.AI
                     // If target is in range, perform ranged attack
                     if (DetectionModule.IsTargetInAttackRange)
                     {
-                        //if too close to Target, dash backwards using AddForce 
+                        //if too close to Target, dash away from the target
                         float distanceToTarget = Vector3.Distance(transform.position, KnownDetectedTarget.transform.position);
                         if (distanceToTarget < MinRangedAttackDistance)
                         {
-                            // Calculate dash direction (away from target)
+                            // Calculate dash direction away from target
                             Vector3 dashDirection = (transform.position - KnownDetectedTarget.transform.position).normalized;
 
-                            // Disable NavMeshAgent speed during dash
-                            float originalSpeed = NavMeshAgent.speed;
-                            NavMeshAgent.speed = 0f;
-
-                            //Play dash animation
-                            Animator.SetTrigger(DashTrigger);
+                            // Play dash animation
+                            if (Animator != null)
+                            {
+                                Animator.SetTrigger(DashTrigger);
+                            }
 
                             // Apply dash force
-                            m_Rigidbody.AddForce(dashDirection * DashForce, ForceMode.Impulse);
-
-                            // Wait for dash duration
+                            StartCoroutine(DashCoroutine(dashDirection));
                             yield return new WaitForSeconds(DashDuration);
-
-                            // Re-enable NavMeshAgent
-                            m_Rigidbody.velocity = Vector3.zero;
-                            NavMeshAgent.speed = originalSpeed;
                         }
 
                         SetNavDestination(transform.position); // Stop moving
@@ -258,11 +294,18 @@ namespace Unity.FPS.AI
                         // Play ranged attack animation
                         if (Animator != null)
                         {
-                            Debug.Log("Ranged attack animation triggered");
                             Animator.SetTrigger(RangedAttackTrigger);
                         }
-
-                        TryAtack(KnownDetectedTarget.transform.position);
+                        yield return new WaitForSeconds(.25f); // Wait for animation to play
+                        // Use our custom ranged weapon
+                        if (RangedWeapon != null)
+                        {
+                            RangedWeapon.Shoot();
+                        }
+                        if (RangedWeapon2 != null)
+                        {
+                            RangedWeapon2.Shoot();
+                        }
                     }
                     break;
 
@@ -273,7 +316,6 @@ namespace Unity.FPS.AI
                     // Play spawn animation
                     if (Animator != null)
                     {
-                        Debug.Log("Spawn enemies animation triggered");
                         Animator.SetTrigger(SpawnAnimationTrigger);
                     }
 
@@ -294,9 +336,69 @@ namespace Unity.FPS.AI
             m_IsAttacking = false;
         }
 
+        private IEnumerator DashCoroutine(Vector3 direction)
+        {
+            Debug.Log($"Starting dash with force {DashForce}, duration {DashDuration}");
+            float startTime = Time.time;
+            NavMeshAgent.enabled = false;
+            m_Rigidbody.isKinematic = true;
+
+            Vector3 startPosition = transform.position;
+            float targetDashDistance = DashForce;
+
+            // Check for obstacles in dash path
+            RaycastHit hit;
+            bool hitObstacle = Physics.Raycast(
+                startPosition,
+                direction,
+                out hit,
+                targetDashDistance,
+                DashObstacleLayers,
+                QueryTriggerInteraction.Ignore
+            );
+
+            // If we hit something, adjust dash distance
+            if (hitObstacle)
+            {
+                targetDashDistance = Mathf.Max(0, hit.distance - 1f); // Stop 1 unit before the obstacle
+                Debug.Log($"Obstacle detected, adjusting dash distance to {targetDashDistance}");
+            }
+
+            float elapsedTime = 0;
+            while (elapsedTime < DashDuration)
+            {
+                elapsedTime = Time.time - startTime;
+                float normalizedTime = elapsedTime / DashDuration;
+
+                // Use NavMesh to find valid position
+                NavMeshHit navHit;
+                Vector3 targetPosition = startPosition + (direction * targetDashDistance);
+                if (NavMesh.SamplePosition(targetPosition, out navHit, targetDashDistance, NavMesh.AllAreas))
+                {
+                    targetPosition = navHit.position;
+                }
+
+                transform.position = Vector3.Lerp(startPosition, targetPosition, normalizedTime);
+                yield return null;
+            }
+
+            // Ensure final position is on NavMesh
+            NavMeshHit finalHit;
+            if (NavMesh.SamplePosition(transform.position, out finalHit, 2f, NavMesh.AllAreas))
+            {
+                transform.position = finalHit.position;
+            }
+
+            float finalDistance = Vector3.Distance(startPosition, transform.position);
+            Debug.Log($"Dash completed. Total distance: {finalDistance}");
+
+            m_Rigidbody.isKinematic = false;
+            NavMeshAgent.enabled = true;
+        }
+
         void SpawnEnemies()
         {
-            if (EnemyPrefabToSpawn == null || SpawnPositions.Length == 0)
+            if (EnemyPrefabsToSpawn == null || EnemyPrefabsToSpawn.Length == 0 || SpawnPositions.Length == 0)
                 return;
 
             // Spawn 1-3 enemies
@@ -310,8 +412,11 @@ namespace Unity.FPS.AI
                 // Choose a random spawn position
                 Transform spawnPos = SpawnPositions[Random.Range(0, SpawnPositions.Length)];
 
+                // Choose a random enemy prefab
+                GameObject prefabToSpawn = EnemyPrefabsToSpawn[Random.Range(0, EnemyPrefabsToSpawn.Length)];
+
                 // Spawn the enemy
-                GameObject enemy = Instantiate(EnemyPrefabToSpawn, spawnPos.position, spawnPos.rotation);
+                GameObject enemy = Instantiate(prefabToSpawn, spawnPos.position, spawnPos.rotation);
 
                 // Add to our list
                 m_SpawnedEnemies.Add(enemy);
@@ -395,6 +500,7 @@ namespace Unity.FPS.AI
             {
                 if (m_BossController != null)
                 {
+                    Debug.Log("Player entered boss room trigger, activating boss.");
                     m_BossController.ActivateBoss();
                 }
             }

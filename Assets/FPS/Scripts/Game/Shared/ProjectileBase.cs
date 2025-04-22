@@ -13,6 +13,7 @@ namespace Unity.FPS.Game
 
         public UnityAction OnShoot;
 
+
         public void Shoot(WeaponController controller)
         {
             Owner = controller.Owner;
@@ -27,7 +28,6 @@ namespace Unity.FPS.Game
         public void Skillshot(GameObject owner)
         {
             Owner = owner;
-            Debug.Log("Owner is: " + Owner.name);
             InitialPosition = transform.position;
             InitialDirection = transform.forward;
             InheritedMuzzleVelocity = Vector3.zero;
