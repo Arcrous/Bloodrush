@@ -143,7 +143,6 @@ namespace Unity.FPS.AI
             // Check each target
             foreach (var hit in hits)
             {
-                Debug.Log($"Melee hit: {hit.name}");
                 // Skip the boss itself
                 if (hit.transform.IsChildOf(Owner.transform) || hit.gameObject == Owner)
                     continue;
