@@ -55,6 +55,10 @@ MonoBehaviour:
   HittableLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  IsHoming: 1
+  HomingStrength: 5
+  HomingDelay: 0.5
+  MaxTurnAngle: 45
 --- !u!1 &5564024855854763701
 GameObject:
   m_ObjectHideFlags: 0

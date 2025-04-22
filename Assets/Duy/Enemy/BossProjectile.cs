@@ -28,11 +28,28 @@ namespace Unity.FPS.AI
         [Tooltip("Layers this projectile can collide with")]
         public LayerMask HittableLayers = -1;
 
+        [Header("Homing Settings")]
+        [Tooltip("Should this projectile home in on the player?")]
+        public bool IsHoming = false;
+
+        [Tooltip("How strongly the projectile turns toward the target")]
+        public float HomingStrength = 5f;
+
+        [Tooltip("Delay before homing starts")]
+        public float HomingDelay = 0.5f;
+
+        [Tooltip("Maximum angle per second the projectile can turn")]
+        public float MaxTurnAngle = 45f;
+
         // Internal variables
         private Vector3 m_LastPosition;
         private List<Collider> m_IgnoredColliders;
         private const QueryTriggerInteraction k_TriggerInteraction = QueryTriggerInteraction.Collide;
         private Transform m_ProjectileTransform;
+        private Transform m_TargetTransform;
+        private float m_TimeSinceLaunch = 0f;
+        private GameObject m_Player;
+        private Vector3 m_MoveDirection;
 
         private void OnEnable()
         {
@@ -44,6 +61,7 @@ namespace Unity.FPS.AI
         {
             m_LastPosition = m_ProjectileTransform.position;
             m_IgnoredColliders = new List<Collider>();
+            m_MoveDirection = m_ProjectileTransform.forward;
 
             // Ignore colliders from the owner (the boss)
             if (Owner != null)
@@ -51,14 +69,54 @@ namespace Unity.FPS.AI
                 Collider[] ownerColliders = Owner.GetComponentsInChildren<Collider>();
                 m_IgnoredColliders.AddRange(ownerColliders);
             }
+
+            // Find the player if we're homing
+            if (IsHoming)
+            {
+                m_Player = GameObject.FindGameObjectWithTag("Player");
+                if (m_Player != null)
+                {
+                    m_TargetTransform = m_Player.transform;
+                }
+                else
+                {
+                    Debug.LogWarning("Homing projectile couldn't find target with Player tag");
+                }
+            }
         }
 
         private void Update()
         {
+            m_TimeSinceLaunch += Time.deltaTime;
+
+            // Update movement direction if homing
+            if (IsHoming && m_TargetTransform != null && m_TimeSinceLaunch > HomingDelay)
+            {
+                // Calculate direction to target
+                Vector3 directionToTarget = (m_TargetTransform.position - m_ProjectileTransform.position).normalized;
+
+                // Gradually rotate towards target based on homing strength
+                float turnSpeed = HomingStrength * Time.deltaTime;
+
+                // Limit max turn angle per second
+                float angle = Vector3.Angle(m_MoveDirection, directionToTarget);
+                float maxDeltaAngle = MaxTurnAngle * Time.deltaTime;
+                float actualTurnFactor = Mathf.Min(turnSpeed, maxDeltaAngle / Mathf.Max(0.1f, angle));
+
+                // Smoothly adjust direction
+                m_MoveDirection = Vector3.Slerp(m_MoveDirection, directionToTarget, actualTurnFactor);
+                m_MoveDirection.Normalize();
+            }
+
             // Move projectile
-            Vector3 moveDirection = m_ProjectileTransform.forward;
-            Vector3 moveStep = moveDirection * Speed * Time.deltaTime;
+            Vector3 moveStep = m_MoveDirection * Speed * Time.deltaTime;
             m_ProjectileTransform.position += moveStep;
+
+            // Align with movement direction
+            if (moveStep.sqrMagnitude > 0.0001f)
+            {
+                m_ProjectileTransform.forward = m_MoveDirection;
+            }
 
             // Check for collisions
             Vector3 currentPosition = m_ProjectileTransform.position;
@@ -141,6 +199,19 @@ namespace Unity.FPS.AI
         {
             Gizmos.color = Color.red * 0.4f;
             Gizmos.DrawSphere(transform.position, Radius);
+
+            if (IsHoming && Application.isPlaying)
+            {
+                // Draw homing path visualization
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawRay(transform.position, m_MoveDirection * 3f);
+
+                if (m_TargetTransform != null)
+                {
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawLine(transform.position, m_TargetTransform.position);
+                }
+            }
         }
     }
 }

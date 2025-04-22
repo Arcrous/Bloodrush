@@ -144,13 +144,13 @@ namespace Unity.FPS.AI
 
         new void Update()
         {
-            if (!IsActive)
+            if (!IsActive && !NavMeshAgent.enabled)
                 return;
 
             base.Update();
 
             // Check if we can attack
-            if (!m_IsAttacking && Time.time >= m_LastAttackTime + AttackCooldown && KnownDetectedTarget != null)
+            if (!m_IsAttacking && Time.time >= m_LastAttackTime + AttackCooldown && KnownDetectedTarget != null && NavMeshAgent.enabled)
             {
                 // Choose a random attack type
                 ChooseAttackType();
@@ -431,8 +431,7 @@ namespace Unity.FPS.AI
             m_WasActivated = true;
             IsActive = true;
 
-            // Enable navmesh agent
-            NavMeshAgent.enabled = true;
+            Invoke("EnableNavMeshAgent", 2f);
 
             // Play activation VFX
             if (BossActivationVfx != null)
@@ -441,6 +440,14 @@ namespace Unity.FPS.AI
             // Trigger event
             if (onBossActivated != null)
                 onBossActivated.Invoke();
+        }
+        void EnableNavMeshAgent()
+        {
+            NavMeshAgent.enabled = true;
+            if (BossRoomTrigger != null)
+            {
+                BossRoomTrigger.enabled = false; // Disable trigger after activation
+            }
         }
 
         // Override to add extra debug visuals

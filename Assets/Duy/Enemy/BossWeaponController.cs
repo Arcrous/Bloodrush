@@ -27,6 +27,9 @@ namespace Unity.FPS.AI
         [Tooltip("Number of projectiles to fire per shot")]
         public int ProjectilesPerShot = 1;
 
+        [Tooltip("Should projectiles aim at the player?")]
+        public bool AimAtPlayer = true;
+
         [Header("Melee Attack Settings")]
         [Tooltip("Is this a melee weapon?")]
         public bool IsMelee = false;
@@ -105,10 +108,17 @@ namespace Unity.FPS.AI
                 Destroy(muzzleFlash, 2f);
             }
 
+            // Get target for aiming, if configured to do so
+            Transform targetTransform = null;
+            if (AimAtPlayer && m_BossController != null && m_BossController.KnownDetectedTarget != null)
+            {
+                targetTransform = m_BossController.KnownDetectedTarget.transform;
+            }
+
             // Fire projectiles
             for (int i = 0; i < ProjectilesPerShot; i++)
             {
-                Vector3 shotDirection = GetShotDirectionWithSpread();
+                Vector3 shotDirection = GetShotDirectionWithSpread(targetTransform);
                 BossProjectile projectile = Instantiate(ProjectilePrefab, MuzzlePoint.position, Quaternion.LookRotation(shotDirection));
                 projectile.Skillshot(Owner);
             }
@@ -167,16 +177,34 @@ namespace Unity.FPS.AI
             OnMeleeAttack?.Invoke();
         }
 
-        private Vector3 GetShotDirectionWithSpread()
+        private Vector3 GetShotDirectionWithSpread(Transform target = null)
         {
-            if (SpreadAngle <= 0f)
+            Vector3 direction;
+
+            // Determine base direction (either towards target or forward)
+            if (target != null)
             {
-                return MuzzlePoint.forward;
+                // Calculate direction to target
+                direction = (target.position - MuzzlePoint.position).normalized;
+
+                // Optional: Predict player movement for more accurate shots
+                // This could be enhanced with actual prediction based on player velocity
+            }
+            else
+            {
+                // Default to the forward direction of the muzzle
+                direction = MuzzlePoint.forward;
             }
 
-            float spreadAngleRatio = SpreadAngle / 180f;
-            Vector3 spreadDirection = Vector3.Slerp(MuzzlePoint.forward, UnityEngine.Random.insideUnitSphere, spreadAngleRatio);
-            return spreadDirection.normalized;
+            // Apply spread if configured
+            if (SpreadAngle > 0f)
+            {
+                float spreadAngleRatio = SpreadAngle / 180f;
+                Vector3 randomDirection = UnityEngine.Random.insideUnitSphere;
+                direction = Vector3.Slerp(direction, randomDirection, spreadAngleRatio);
+            }
+
+            return direction.normalized;
         }
 
         private void OnDrawGizmosSelected()
@@ -194,6 +222,25 @@ namespace Unity.FPS.AI
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawRay(transform.position, rightDir * MeleeRange);
                 Gizmos.DrawRay(transform.position, leftDir * MeleeRange);
+            }
+            else
+            {
+                // Draw firing direction
+                Gizmos.color = Color.blue;
+                Gizmos.DrawRay(MuzzlePoint.position, MuzzlePoint.forward * 5f);
+
+                // Draw spread cone if applicable
+                if (SpreadAngle > 0f)
+                {
+                    float coneDistance = 5f;
+                    float spreadRadians = SpreadAngle * Mathf.Deg2Rad * 0.5f;
+                    float coneRadius = Mathf.Tan(spreadRadians) * coneDistance;
+
+                    Vector3 coneEnd = MuzzlePoint.position + MuzzlePoint.forward * coneDistance;
+                    Gizmos.color = new Color(0f, 0f, 1f, 0.2f);
+                    Gizmos.DrawLine(MuzzlePoint.position, coneEnd);
+                    Gizmos.DrawWireSphere(coneEnd, coneRadius);
+                }
             }
         }
     }
