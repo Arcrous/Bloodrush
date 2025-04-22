@@ -176,7 +176,7 @@ namespace Unity.FPS.AI
                     DetectionModule.AttackRange = MeleeAttackRange;
                     Debug.Log("Melee attack range is now: " + DetectionModule.AttackRange);
 
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(.1f);
 
                     // Wait until we're in melee range or timeout
                     float meleeStartTime = Time.time;
@@ -212,7 +212,7 @@ namespace Unity.FPS.AI
                     DetectionModule.AttackRange = RangedAttackRange;
                     Debug.Log("Ranged attack range is now: " + DetectionModule.AttackRange);
 
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(.1f);
 
                     // Move to ranged attack range
                     float rangedStartTime = Time.time;
