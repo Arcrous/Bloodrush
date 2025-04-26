@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7401687370700434548}
   - component: {fileID: 5839713749715416677}
   - component: {fileID: 802542995238270056}
-  - component: {fileID: 2668822002875259994}
+  - component: {fileID: 143248144751549916}
   m_Layer: 0
   m_Name: Pickup_Sniper_Unlock
   m_TagString: Untagged
@@ -83,7 +83,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2668822002875259994
+--- !u!114 &143248144751549916
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,16 +92,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 5752645732586194412}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bffb1311779ed346a19fef7c9fa65ea, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b37b5be245cc7d439ff07bd016e3017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   VerticalBobFrequency: 1
-  BobbingAmount: 0.5
+  BobbingAmount: 1
   RotatingSpeed: 69
   PickupSfx: {fileID: 8300000, guid: 6f3e0904bbbace745bdef08cdbcdfec0, type: 3}
   PickupVfxPrefab: {fileID: 0}
-  WeaponPrefab: {fileID: 0}
+  unlockPowershot: 0
+  unlockBindingShot: 0
   unlockUlt: 1
+  ultGaugeUI: {fileID: 0}
 --- !u!1 &6721469392734629721
 GameObject:
   m_ObjectHideFlags: 0

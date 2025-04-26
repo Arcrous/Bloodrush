@@ -5224,7 +5224,7 @@ Transform:
   - {fileID: 4822688225541731873}
   - {fileID: 3644016692666745527}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3693299555126747666
 MonoBehaviour:
@@ -5285,7 +5285,7 @@ MonoBehaviour:
   DeathVfxSpawnPoint: {fileID: 1257841006795493}
   LootPrefab: {fileID: 2529580269645609534, guid: 9973c412032becb4ca116ca08be62edf,
     type: 3}
-  DropRate: 1
+  DropRate: 0
   PathReachingRangeColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   AttackRangeColor: {r: 1, g: 0, b: 0, a: 1}
   DetectionRangeColor: {r: 0, g: 0, b: 1, a: 1}
@@ -5309,7 +5309,7 @@ MonoBehaviour:
   - {fileID: 271757552807986189}
   - {fileID: 322055775091439978}
   OnDetectVfx:
-  - {fileID: 6588833341615686546}
+  - {fileID: 5010117984351972858}
   OnDetectSfx: {fileID: 8300000, guid: 25722734eeccba042a18e26e376ca542, type: 3}
   MovementSound: {fileID: 0}
   PitchDistortionMovementSpeed:
@@ -21088,7 +21088,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: aeb3c8527ef17d045890272e6291cc3b,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6588833341615686549}
+      addedObject: {fileID: 5010117984351972861}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: aeb3c8527ef17d045890272e6291cc3b,
         type: 3}
       insertIndex: -1
@@ -21252,13 +21252,13 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1bc9e4f49c67a6a41af3e7cb3d30bb43, type: 3}
---- !u!198 &6588833341615686546 stripped
+--- !u!198 &5010117984351972858 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 8855434715677272938, guid: 1bc9e4f49c67a6a41af3e7cb3d30bb43,
     type: 3}
   m_PrefabInstance: {fileID: 4567583746894808720}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &6588833341615686549 stripped
+--- !u!4 &5010117984351972861 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8855434715677272941, guid: 1bc9e4f49c67a6a41af3e7cb3d30bb43,
     type: 3}

@@ -9,11 +9,14 @@ namespace Unity.FPS.Gameplay
     {
         [Header("Skills and Ult")]
         [Tooltip("Reference to skills projectile and ultimate related variables")]
-        [SerializeField] public bool ultUnlocked = false;
-        [SerializeField] public bool canUseUlt;
-        [SerializeField] public bool isUlting;
-        [SerializeField] public float ultGauge;
+        public bool ultUnlocked = false;
+        public bool canUseUlt;
+        public bool isUlting;
+        public float ultGauge;
         [SerializeField] GameObject ultPrefab;
+
+        public bool powershotUnlocked = false;
+        public bool bindingShotUnlocked = false;
 
         [Tooltip("The projectile prefab for powershot")] public ProjectileBase PowershotPrefab;
         [Tooltip("The projectile prefab for powershot")] public ProjectileBase BindingshotPrefab;
@@ -260,8 +263,14 @@ namespace Unity.FPS.Gameplay
             {
                 canUseUlt = true;
             }
-            PowershotInput();
-            BindingShotInput();
+            if (powershotUnlocked)
+            {
+                PowershotInput();
+            }
+            if (bindingShotUnlocked)
+            {
+                BindingShotInput();
+            }
             if (ultUnlocked)
             {
                 AntiRifleInput();
