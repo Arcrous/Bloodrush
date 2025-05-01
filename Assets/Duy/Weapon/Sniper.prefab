@@ -198,6 +198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsSniper: 1
+  shotsFired: 0
   WeaponName: Railgun
   WeaponIcon: {fileID: 21300000, guid: 32f553a79b48c594f888a865a107c899, type: 3}
   CrosshairDataDefault:
@@ -228,11 +229,11 @@ MonoBehaviour:
   ShellPoolSize: 1
   AmmoReloadRate: 15
   AmmoReloadDelay: 1
-  MaxAmmo: 5
-  AutomaticReleaseOnCharged: 1
+  MaxAmmo: 6
+  AutomaticReleaseOnCharged: 0
   MaxChargeDuration: 1.5
   AmmoUsedOnStartCharge: 0
-  AmmoUsageRateWhileCharging: 1
+  AmmoUsageRateWhileCharging: 0
   WeaponAnimator: {fileID: 0}
   MuzzleFlashPrefab: {fileID: 748781637555137343, guid: 3f5b545b9a1e74c418b061bba5bb9e2c,
     type: 3}

@@ -23,6 +23,8 @@ namespace Unity.FPS.AI
             }
         }
 
+        public ParticleSystem bindParticlePrefab;
+
         [Header("Parameters")]
         [Tooltip("The Y height at which the enemy will be automatically killed (if it falls off of the level)")]
         public float SelfDestructYHeight = -20f;
@@ -381,6 +383,11 @@ namespace Unity.FPS.AI
         {
             if (m_Health.m_IsDead)
                 yield break;
+
+            if (bindParticlePrefab != null)
+            {
+                bindParticlePrefab.Play();
+            }
 
             Debug.Log("Bound");
             float originalSpeed = NavMeshAgent.speed;

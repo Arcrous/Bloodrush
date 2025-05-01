@@ -309,11 +309,11 @@ namespace Unity.FPS.Gameplay
 
         void AntiRifleInput()
         {
-            if (m_InputHandler.GetAntiRifleInput() && canUseUlt)
+            if (m_InputHandler.GetAntiRifleInput() && canUseUlt && ultGauge >= 100f)
             {
                 Debug.Log("Anti rifle input");
-                Instantiate(ultPrefab, this.gameObject.transform.position, Quaternion.identity);
                 ultGauge = 0f;
+                Instantiate(ultPrefab, this.gameObject.transform.position, Quaternion.identity);
                 isUlting = true;
             }
             else if (m_InputHandler.GetAntiRifleInput() && !canUseUlt)

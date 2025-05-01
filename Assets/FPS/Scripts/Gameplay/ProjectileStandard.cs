@@ -256,12 +256,9 @@ namespace Unity.FPS.Gameplay
                 {
                     damageable.InflictDamage(Damage, false, m_ProjectileBase.Owner);
 
-                    if (collider.tag == "Enemy")
-                    {
-                        playerController = GameObject.FindWithTag("Player").GetComponentInParent<PlayerCharacterController>();
-                        playerController.ultGauge += 5f;
-                        Debug.Log("Player ult %: " + playerController.ultGauge);
-                    }
+                    playerController = GameObject.FindWithTag("Player").GetComponentInParent<PlayerCharacterController>();
+                    playerController.ultGauge += 5f;
+                    Debug.Log("Player ult %: " + playerController.ultGauge);
                 }
             }
 

@@ -1,4 +1,4 @@
-﻿using Unity.FPS.Game;
+using Unity.FPS.Game;
 using Unity.FPS.Gameplay;
 using UnityEngine;
 
@@ -24,6 +24,12 @@ namespace Unity.FPS.UI
             jetpack.OnUnlockJetpack += OnUnlockJetpack;
 
             EventManager.AddListener<ObjectiveUpdateEvent>(OnObjectiveUpdateEvent);
+            EventManager.AddListener<AbilityPickupEvent>(OnAbilityPickup);
+        }
+
+        void Start()
+        {
+            CreateNotification("Picked up Healing Pistol");
         }
 
         void OnObjectiveUpdateEvent(ObjectiveUpdateEvent evt)
@@ -43,6 +49,11 @@ namespace Unity.FPS.UI
             CreateNotification("Jetpack unlocked");
         }
 
+        void OnAbilityPickup(AbilityPickupEvent evt)
+        {
+            CreateNotification("Unlocked ability: " + evt.AbilityName);
+        }
+
         public void CreateNotification(string text)
         {
             GameObject notificationInstance = Instantiate(NotificationPrefab, NotificationPanel);
@@ -58,6 +69,7 @@ namespace Unity.FPS.UI
         void OnDestroy()
         {
             EventManager.RemoveListener<ObjectiveUpdateEvent>(OnObjectiveUpdateEvent);
+            EventManager.RemoveListener<AbilityPickupEvent>(OnAbilityPickup);
         }
     }
 }
